@@ -15,8 +15,8 @@ def otsu_thresholding(frame):
        and then use Otsu's thresholding algorithm."""
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gaussian_filter = cv2.GaussianBlur(gray_frame, (5, 5), 0)
-    _, threshold = cv2.threshold(gaussian_filter, 0, 255, cv2.THRESH_BINARY +
-                            cv2.THRESH_OTSU)
+    _, threshold = cv2.threshold(gaussian_filter, 0, 255,
+                                 cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     return threshold
 
 
