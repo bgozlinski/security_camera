@@ -41,7 +41,7 @@ def camera_start(port):
     if capture.isOpened() is False:
         print('Error opening the camera')
 
-    return capture
+    return capture, fps
 
 
 def camera_stop(capture):
@@ -50,11 +50,12 @@ def camera_stop(capture):
 
 
 if __name__ == "__main__":
-    camera = camera_start(port=0)
+    camera, fps = camera_start(port=0)
 
     prev_frame = None
 
     while camera.isOpened():
+        print(f'{fps}')
         frame = get_frame(camera)
 
         if frame is not None:
