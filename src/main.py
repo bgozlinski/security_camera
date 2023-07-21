@@ -41,10 +41,21 @@ def camera_start(port):
     if capture.isOpened() is False:
         print('Error opening the camera')
 
+    return capture
+
+
+def camera_stop(capture):
+    capture.release()
+    cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    camera = camera_start(port=0)
+
     prev_frame = None
 
-    while capture.isOpened():
-        frame = get_frame(capture)
+    while camera.isOpened():
+        frame = get_frame(camera)
 
         if frame is not None:
             if prev_frame is not None:
@@ -60,9 +71,6 @@ def camera_start(port):
         else:
             break
 
-    capture.release()
-    cv2.destroyAllWindows()
+    camera_stop(camera)
 
 
-if __name__ == "__main__":
-    camera_start(0)
