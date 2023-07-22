@@ -1,4 +1,5 @@
 import cv2
+import numpy
 
 
 def get_frame(capture):
@@ -10,20 +11,37 @@ def get_frame(capture):
         return None
 
 
-def threshold_frame(frame):
-    """Convert the frame to grayscale, apply Gaussian filter,
-       and then use threshold algorithm."""
+def threshold_frame(frame: numpy.ndarray) -> numpy.ndarray:
+    """
+    Convert the input frame to grayscale, apply Gaussian blur for noise reduction,
+    use adaptive thresholding to highlight significant differences in pixel values,
+    and then dilate to enhance highlighted regions.
+
+    Parameters:
+    - frame: Input image (typically a frame from a video sequence).
+
+    Returns:
+    - threshold: Processed binary image highlighting areas of significant change.
+    """
+
+    # Convert the frame to grayscale for simpler processing
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    # Apply Gaussian blur to the grayscale frame to reduce noise and smooth the image
     gaussian_filter = cv2.GaussianBlur(gray_frame, (5, 5), 0)
-    _, threshold = cv2.threshold(gaussian_filter, 25, 255,
-                                 cv2.THRESH_BINARY)
-    return threshold
 
+    # Apply adaptive thresholding using Gaussian method. This helps in dynamically
+    # determining the threshold for each pixel based on its neighborhood.
+    # The result is inverted (white becomes black and vice versa) using THRESH_BINARY_INV.
+    threshold = cv2.adaptiveThreshold(src=gaussian_filter,
+                                      maxValue=255,
+                                      adaptiveMethod=cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                      thresholdType=cv2.THRESH_BINARY_INV,
+                                      blockSize=11,
+                                      C=5)
 
-def frame_difference(src1, src2):
-    """TODO"""
-    diff_frame = cv2.absdiff(src1=src1, src2=src2)
-    threshold = threshold_frame(diff_frame)
+    # Dilate the thresholded image to enhance and join any fragmented regions
+    threshold = cv2.dilate(threshold, None, iterations=2)
+
     return threshold
 
 
@@ -60,10 +78,10 @@ if __name__ == "__main__":
 
         if frame is not None:
             if prev_frame is not None:
-                threshold = frame_difference(frame, prev_frame)
-
+                diff_frame = cv2.absdiff(src1=frame, src2=prev_frame)
+                threshold_diff = threshold_frame(diff_frame)
                 cv2.imshow('Raw camera view', frame)
-                cv2.imshow('Threshold + Gaussian filter', threshold)
+                cv2.imshow('Threshold + Gaussian filter', threshold_diff)
 
             prev_frame = frame
 
