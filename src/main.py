@@ -1,5 +1,5 @@
 import cv2
-import numpy
+import numpy as np
 
 
 def get_frame(capture):
@@ -16,8 +16,7 @@ def get_frame(capture):
     ret, frame = capture.read()
     if ret:
         return frame
-    else:
-        return None
+    return None
 
 
 def camera_start(port):
@@ -86,8 +85,8 @@ if __name__ == "__main__":
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
             # Display the original frame and the foreground mask
-            cv2.imshow('Raw camera view', frame)
-            cv2.imshow('fgmask', fgmask)
+            combined_frame = np.hstack((frame, cv2.cvtColor(fgmask, cv2.COLOR_GRAY2BGR)))
+            cv2.imshow('View', combined_frame)
 
             # Break the loop if 'q' is pressed
             if cv2.waitKey(20) & 0xFF == ord('q'):
