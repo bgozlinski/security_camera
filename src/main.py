@@ -12,7 +12,9 @@ if __name__ == "__main__":
     # Initialize the Background Subtractor once
     fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=False)
 
+    # Set the initial save time to the current time.
     next_save_time = datetime.now()
+
     # Main loop to process each frame
     while camera.isOpened():
         # Get the current frame
@@ -21,10 +23,11 @@ if __name__ == "__main__":
         # Apply the background subtractor to get the foreground mask
         fgmask = fgbg.apply(frame)
 
-
-        # Draw dot on detected movement
+        # If there's notable motion (validated by `highlight_motion_center`), check the save conditions.
         if highlight_motion_center(frame, fgmask):
             current_time = datetime.now()
+
+            # If the current time is beyond the next save time, save the frame and reset the timer.
             if current_time >= next_save_time:
                 get_camera_shot(frame=frame)
                 next_save_time = current_time + timedelta(seconds=10)
