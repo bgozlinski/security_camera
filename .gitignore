@@ -17,3 +17,7 @@ venv.bak/
 
 # PyCharm
 .idea/
+
+# Media files
+*.jpg
+*.mp4
