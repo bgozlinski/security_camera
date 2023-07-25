@@ -1,4 +1,5 @@
 import cv2
+from datetime import datetime
 
 
 def get_frame(capture):
@@ -56,3 +57,10 @@ def camera_stop(capture):
 
     capture.release()
     cv2.destroyAllWindows()
+
+
+def get_camera_shot(frame):
+    now = datetime.now()
+    filename = now.strftime("img_%Y%m%d%H%M%S")
+    print(filename)
+    cv2.imwrite(f'images/{filename}.jpg', frame)

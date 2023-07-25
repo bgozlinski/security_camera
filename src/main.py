@@ -1,7 +1,8 @@
 import cv2
 import numpy as np
-from camera import camera_start, camera_stop, get_frame
+from camera import camera_start, camera_stop, get_frame, get_camera_shot
 from motion_detect import highlight_motion_center
+from datetime import datetime, timedelta
 
 
 if __name__ == "__main__":
@@ -11,6 +12,7 @@ if __name__ == "__main__":
     # Initialize the Background Subtractor once
     fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=False)
 
+    next_save_time = datetime.now()
     # Main loop to process each frame
     while camera.isOpened():
         # Get the current frame
@@ -19,8 +21,13 @@ if __name__ == "__main__":
         # Apply the background subtractor to get the foreground mask
         fgmask = fgbg.apply(frame)
 
+
         # Draw dot on detected movement
-        highlight_motion_center(frame, fgmask)
+        if highlight_motion_center(frame, fgmask):
+            current_time = datetime.now()
+            if current_time >= next_save_time:
+                get_camera_shot(frame=frame)
+                next_save_time = current_time + timedelta(seconds=10)
 
         # Display the combined frame (original frame + foreground mask)
         combined_frame = np.hstack((frame, cv2.cvtColor(fgmask, cv2.COLOR_GRAY2BGR)))

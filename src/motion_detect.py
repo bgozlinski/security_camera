@@ -1,4 +1,5 @@
 import cv2
+from datetime import datetime
 
 
 def highlight_motion_center(frame, fgmask):
@@ -28,3 +29,5 @@ def highlight_motion_center(frame, fgmask):
                        radius=5,
                        color=(0, 0, 255),
                        thickness=-1)
+    return True
+
