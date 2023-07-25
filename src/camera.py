@@ -1,4 +1,5 @@
 import cv2
+import os
 from datetime import datetime
 
 
@@ -60,7 +61,25 @@ def camera_stop(capture):
 
 
 def get_camera_shot(frame):
+    """
+    Save the provided frame as an image in the "images" folder.
+    If the folder doesn't exist, it will be created.
+
+    Args:
+    - frame: The frame to be saved.
+
+    Returns:
+    - bool: True if the image is saved successfully, False otherwise.
+    """
+
     now = datetime.now()
     filename = now.strftime("img_%Y%m%d%H%M%S")
-    print(filename)
+
+    # Ensure the "images" directory exists
+    if not os.path.exists("images"):
+        os.makedirs("images")
+
+    # Save the frame as an image
     cv2.imwrite(f'images/{filename}.jpg', frame)
+
+    return True
