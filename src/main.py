@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from camera import camera_start, camera_stop, get_frame, get_camera_shot
+from camera import camera_start, camera_stop, get_frame, get_camera_shot, get_camera_record
 from motion_detect import highlight_motion_center
 from datetime import datetime, timedelta
 
@@ -30,6 +30,7 @@ if __name__ == "__main__":
             # If the current time is beyond the next save time, save the frame and reset the timer.
             if current_time >= next_save_time:
                 get_camera_shot(frame=frame)
+                get_camera_record(capture=camera, duration=10)
                 next_save_time = current_time + timedelta(seconds=10)
 
         # Display the combined frame (original frame + foreground mask)

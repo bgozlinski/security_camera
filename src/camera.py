@@ -73,13 +73,59 @@ def get_camera_shot(frame):
     """
 
     now = datetime.now()
-    filename = now.strftime("img_%Y%m%d%H%M%S")
+    filename = now.strftime('img_%Y%m%d%H%M%S.jpg')
 
     # Ensure the "images" directory exists
     if not os.path.exists("images"):
         os.makedirs("images")
 
     # Save the frame as an image
-    cv2.imwrite(f'images/{filename}.jpg', frame)
+    cv2.imwrite(f'images/{filename}', frame)
 
     return True
+
+
+def get_camera_record(capture, duration=None):
+
+    if capture is None or not capture.isOpened():
+        return False
+    frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = int(capture.get(cv2.CAP_PROP_FPS))
+
+    now = datetime.now()
+    filename = now.strftime('video_%Y%m%d%H%M%S.mp4')
+
+    if not os.path.exists("records"):
+        os.makedirs("records")
+
+    out = cv2.VideoWriter(filename=f'records/{filename}',
+                          fourcc=cv2.VideoWriter_fourcc(*'mp4v'),
+                          fps=fps,
+                          frameSize=(frame_width, frame_height),
+                          )
+
+    start_time = datetime.now()
+
+    try:
+        while True:
+            frame = get_frame(capture)
+            if frame is None:
+                break
+
+            out.write(frame)
+
+            if duration and (datetime.now() - start_time).seconds > duration or (cv2.waitKey(1) & 0xFF == ord('q')):
+                break
+
+    except Exception as e:
+        print(f'Error durring recording {e}')
+        return False
+
+    finally:
+        out.release()
+        cv2.destroyAllWindows()
+
+    return True
+
+
