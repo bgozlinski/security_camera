@@ -86,9 +86,28 @@ def get_camera_shot(frame):
 
 
 def get_camera_record(capture, duration=None):
+    """
+    Record video from a given VideoCapture object and save it as an MP4 file.
+
+    The video is saved in the "records" directory with a timestamp-based
+    filename. If the directory doesn't exist, it will be created.
+
+    Recording will continue until the specified duration is reached or
+    the 'q' key is pressed, whichever comes first.
+
+    Args:
+    - capture (cv2.VideoCapture): The VideoCapture object from which to record video.
+    - duration (int, optional): The duration in seconds for which to record.
+                                If not specified, recording continues indefinitely
+                                until 'q' key is pressed.
+
+    Returns:
+    - bool: True if the video is recorded successfully, False otherwise.
+    """
 
     if capture is None or not capture.isOpened():
         return False
+
     frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(capture.get(cv2.CAP_PROP_FPS))
@@ -96,9 +115,11 @@ def get_camera_record(capture, duration=None):
     now = datetime.now()
     filename = now.strftime('video_%Y%m%d%H%M%S.mp4')
 
+    # Ensure the "records" directory exists
     if not os.path.exists("records"):
         os.makedirs("records")
 
+    # Initialize video writer
     out = cv2.VideoWriter(filename=f'records/{filename}',
                           fourcc=cv2.VideoWriter_fourcc(*'mp4v'),
                           fps=fps,
