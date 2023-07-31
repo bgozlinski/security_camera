@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 
-def get_frame(capture):
+def capture_frame(capture):
     """
     Capture and return the real frame from the camera.
 
@@ -60,7 +60,7 @@ def camera_stop(capture):
     cv2.destroyAllWindows()
 
 
-def get_camera_shot(frame):
+def capture_image(frame):
     """
     Save the provided frame as an image in the "images" folder.
     If the folder doesn't exist, it will be created.
@@ -85,7 +85,7 @@ def get_camera_shot(frame):
     return True
 
 
-def get_camera_record(capture, duration=None):
+def capture_video(capture, duration=None):
     """
     Record video from a given VideoCapture object and save it as an MP4 file.
 
@@ -130,7 +130,7 @@ def get_camera_record(capture, duration=None):
 
     try:
         while True:
-            frame = get_frame(capture)
+            frame = capture_frame(capture)
             if frame is None:
                 break
 
