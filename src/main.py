@@ -33,9 +33,8 @@ if __name__ == "__main__":
                 capture_video(capture=camera, duration=10)
                 next_save_time = current_time + timedelta(seconds=10)
 
-        # Display the combined frame (original frame + foreground mask)
-        combined_frame = np.hstack((frame, cv2.cvtColor(fgmask, cv2.COLOR_GRAY2BGR)))
-        cv2.imshow('View', combined_frame)
+        # # Display the combined frame (original frame + foreground mask)
+        # combined_frame = np.hstack((frame, cv2.cvtColor(fgmask, cv2.COLOR_GRAY2BGR)))
 
         # Break the loop if 'q' is pressed
         if cv2.waitKey(20) & 0xFF == ord('q'):

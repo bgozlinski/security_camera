@@ -134,6 +134,9 @@ def capture_video(capture, duration=None):
             if frame is None:
                 break
 
+            # Display the resulting frame
+            cv2.imshow('View', frame)
+
             out.write(frame)
 
             if duration and (datetime.now() - start_time).seconds > duration or (cv2.waitKey(1) & 0xFF == ord('q')):
@@ -148,5 +151,3 @@ def capture_video(capture, duration=None):
         cv2.destroyAllWindows()
 
     return True
-
-
