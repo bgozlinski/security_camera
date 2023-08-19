@@ -11,9 +11,11 @@ config.read('src/config/config.ini')
 # Fetching configurations
 camera_port = int(config['DEFAULT']['CameraPort'])
 frame_resize_percent = int(config['DEFAULT']['FrameResizePercent'])
-motion_area_threshold = int(config['DEFAULT']['MotionAreaThreshold'])
 save_interval_seconds = int(config['DEFAULT']['SaveIntervalSeconds'])
 frame_skip_count = int(config['DEFAULT']['FrameSkip'])
+motion_area_threshold = int(config['MOTIION']['MotionAreaThreshold'])
+dot_radius = int(config['MOTIION']['DotRadius'])
+dot_colour = tuple(map(int, config.get('MOTION', 'DotColour', fallback="(0, 0, 255)").strip('()').split(',')))
 
 if __name__ == "__main__":
     # Start the camera.
@@ -50,7 +52,11 @@ if __name__ == "__main__":
         fgmask = fgbg.apply(frame)
 
         # Get contour area.
-        motion_area = highlight_motion_center(frame, fgmask)
+        motion_area = highlight_motion_center(frame=frame,
+                                              fgmask=fgmask,
+                                              dot_radius=dot_radius,
+                                              dot_color=dot_colour,
+                                              area_threshold=motion_area_threshold)
 
         # Check for motion based on a defined threshold
         if motion_area > motion_area_threshold:
