@@ -62,7 +62,7 @@ if __name__ == "__main__":
                                               area_threshold=motion_area_threshold)
 
         # Check for motion based on a defined threshold
-        if motion_area > motion_area_threshold:
+        if motion_area:
             current_time = datetime.now()
 
             if current_time >= next_save_time:
