@@ -14,7 +14,7 @@ def highlight_motion_center(frame, fgmask, dot_radius=5, dot_color=(0, 0, 255), 
     - area_threshold (int): Minimum contour area to be considered for drawing the dot.
 
     Returns:
-    - bool: True if a notable motion center is detected and highlighted, False otherwise.
+    - int: Area of the primary motion. Returns 0 if no significant motion is detected.
     """
 
     # Noise Reduction.
