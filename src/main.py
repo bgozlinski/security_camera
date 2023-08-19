@@ -37,11 +37,12 @@ if __name__ == "__main__":
         # Apply the background subtractor to get the foreground mask.
         fgmask = fgbg.apply(frame)
 
-        # If there's notable motion (validated by `highlight_motion_center`), check the save conditions.
-        if highlight_motion_center(frame, fgmask):
-            current_time = datetime.now()
+        # Get contour area.
+        motion_area = highlight_motion_center(frame, fgmask)
 
-            # If the current time is beyond the next save time, save the frame and reset the timer.
+        # Check for motion based on a defined threshold
+        if motion_area > 5000:
+            current_time = datetime.now()
             if current_time >= next_save_time:
                 # capture_image(frame=frame)
                 # capture_video(capture=camera, duration=10)
