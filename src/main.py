@@ -1,13 +1,23 @@
 import cv2
 import numpy as np
+import configparser
 from camera import camera_start, camera_stop, capture_frame, capture_image, capture_video, resize_frame
 from motion_detect import highlight_motion_center
 from datetime import datetime, timedelta
 
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+# Fetching configurations
+camera_port = int(config['DEFAULT']['CameraPort'])
+frame_resize_percent = int(config['DEFAULT']['FrameResizePercent'])
+motion_area_threshold = int(config['DEFAULT']['MotionAreaThreshold'])
+save_interval_seconds = int(config['DEFAULT']['SaveIntervalSeconds'])
+frame_skip_count = int(config['DEFAULT']['FrameSkip'])
 
 if __name__ == "__main__":
     # Start the camera.
-    camera, fps = camera_start(port=0)
+    camera, fps = camera_start(port=camera_port)
 
     # Quick check if camera is available before proceeding.
     if not camera.isOpened():
@@ -32,7 +42,7 @@ if __name__ == "__main__":
         frame = capture_frame(camera)
 
         # Resize frame for better performance.
-        frame = resize_frame(frame)
+        frame = resize_frame(frame, scale_percent=frame_resize_percent)
 
         # Apply the background subtractor to get the foreground mask.
         fgmask = fgbg.apply(frame)
