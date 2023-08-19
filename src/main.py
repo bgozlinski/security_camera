@@ -50,7 +50,7 @@ if __name__ == "__main__":
         fgmask = fgbg.apply(frame)
 
         # Get contour area.
-        motion_area = highlight_motion_center(fgmask)
+        motion_area = highlight_motion_center(frame, fgmask)
 
         # Check for motion based on a defined threshold
         if motion_area > motion_area_threshold:
