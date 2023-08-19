@@ -40,6 +40,7 @@ def highlight_motion_center(frame, fgmask, dot_radius=5, dot_color=(0, 0, 255), 
                        radius=dot_radius,
                        color=dot_color,
                        thickness=-1)
+
             return cv2.contourArea(max_contour)
 
     return 0
