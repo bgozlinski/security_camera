@@ -32,8 +32,9 @@ if __name__ == "__main__":
     # Initialize the Background Subtractor once.
     fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=False)
 
-    # Set the initial save time to the current time.
-    next_save_time = datetime.now()
+    # Set the initial save time to future in save_interval_seconds second.
+    next_save_time = datetime.now() + timedelta(seconds=save_interval_seconds)
+
 
     # Counter to skip frames for optimization.
     frame_skip = 0
