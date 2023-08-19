@@ -40,10 +40,11 @@ if __name__ == "__main__":
     # Main loop to process each frame.
     while True:
         # Get the current frame.
-        frame = capture_frame(camera)
+        frame = capture_frame(capture=camera)
 
         # Resize frame for better performance.
-        frame = resize_frame(frame)
+        frame = resize_frame(frame=frame,
+                             scale_percent=frame_resize_percent)
 
         # Apply the background subtractor to get the foreground mask.
         fgmask = fgbg.apply(frame)
@@ -52,12 +53,12 @@ if __name__ == "__main__":
         motion_area = highlight_motion_center(fgmask)
 
         # Check for motion based on a defined threshold
-        if motion_area > 5000:
+        if motion_area > motion_area_threshold:
             current_time = datetime.now()
             if current_time >= next_save_time:
                 # capture_image(frame=frame)
                 # capture_video(capture=camera, duration=10)
-                next_save_time = current_time + timedelta(seconds=10)
+                next_save_time = current_time + timedelta(seconds=save_interval_seconds)
 
         # Display the combined frame (original frame + foreground mask).
         combined_frame = np.hstack((frame, cv2.cvtColor(fgmask, cv2.COLOR_GRAY2BGR)))
@@ -65,7 +66,7 @@ if __name__ == "__main__":
 
         # Skip some frames for performance optimization.
         frame_skip += 1
-        if frame_skip % 3 == 0:
+        if frame_skip % frame_skip_count == 0:
             # Break the loop if 'q' is pressed.
             if cv2.waitKey(20) & 0xFF == ord('q'):
                 break
