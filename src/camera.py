@@ -80,6 +80,13 @@ def capture_image(frame):
         if not os.path.exists("images"):
             os.makedirs("images")
 
+        # Put current DateTime on frame
+        font = cv2.FONT_HERSHEY_PLAIN
+        time_stamp = now.strftime('%Y-%m-%d %H:%M:%S')
+
+        cv2.putText(frame, str(time_stamp), (0, 10),
+                    font, 1, (255, 0, 0), 1, cv2.LINE_AA)
+
         # Save the frame as an image.
         cv2.imwrite(f'images/{filename}', frame)
         print(f"Image saved as images/{filename}")  # Add this line to confirm the image is saved
