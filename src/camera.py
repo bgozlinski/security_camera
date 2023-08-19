@@ -72,17 +72,22 @@ def capture_image(frame):
     - bool: True if the image is saved successfully, False otherwise.
     """
 
-    now = datetime.now()
-    filename = now.strftime('img_%Y%m%d%H%M%S.jpg')
+    try:
+        now = datetime.now()
+        filename = now.strftime('img_%Y%m%d%H%M%S.jpg')
 
-    # Ensure the "images" directory exists
-    if not os.path.exists("images"):
-        os.makedirs("images")
+        # Ensure the "images" directory exists.
+        if not os.path.exists("images"):
+            os.makedirs("images")
 
-    # Save the frame as an image
-    cv2.imwrite(f'images/{filename}', frame)
+        # Save the frame as an image.
+        cv2.imwrite(f'images/{filename}', frame)
+        print(f"Image saved as images/{filename}")  # Add this line to confirm the image is saved
 
-    return True
+        return True
+    except Exception as e:
+        print(f"Error saving image: {e}")
+        return False
 
 
 def capture_video(capture, duration=None):
