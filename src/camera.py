@@ -154,6 +154,17 @@ def capture_video(capture, duration=None):
 
 
 def resize_frame(frame, scale_percent=50):
+    """
+    Resizes a given frame by the specified percentage.
+
+    Args:
+    - frame (numpy.ndarray): The input frame to be resized.
+    - scale_percent (int, optional): The percentage by which the frame should be resized. Default is 50%.
+
+    Returns:
+    - numpy.ndarray: The resized frame.
+    """
+
     width = int(frame.shape[1] * scale_percent / 100)
     height = int(frame.shape[0] * scale_percent / 100)
     return cv2.resize(frame, (width, height))  # <-- New Function

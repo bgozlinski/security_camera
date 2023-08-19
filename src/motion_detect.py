@@ -2,13 +2,20 @@ import cv2
 import numpy as np
 
 
-def highlight_motion_center(frame, fgmask):
+def highlight_motion_center(fgmask):
     """
-    Draw a dot in the center of the detected movement.
+    Highlights the center of detected motion in the given frame using a red dot.
+
+    This function works by finding contours in the foreground mask, determining
+    the center of the largest contour (representing the most significant motion),
+    and then drawing a red dot on the original frame at that center location.
 
     Args:
-    - frame: The current frame from the video capture.
-    - fgmask: The foreground mask after background subtraction.
+    - frame (numpy.ndarray): The current frame from the video capture.
+    - fgmask (numpy.ndarray): The foreground mask after background subtraction, used to detect motion.
+
+    Returns:
+    - bool: True if a notable motion center is detected and highlighted, False otherwise.
     """
 
     # 5x5 window for noise reduction.

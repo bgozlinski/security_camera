@@ -6,7 +6,7 @@ from motion_detect import highlight_motion_center
 from datetime import datetime, timedelta
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('src/config/config.ini')
 
 # Fetching configurations
 camera_port = int(config['DEFAULT']['CameraPort'])
@@ -22,7 +22,8 @@ if __name__ == "__main__":
     # Quick check if camera is available before proceeding.
     if not camera.isOpened():
         print("Camera initialization failed!")
-        exit()  # <-- Error handling added
+        # Error handling added
+        exit()
 
     # Initialize the Background Subtractor once.
     fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=False)
@@ -42,13 +43,13 @@ if __name__ == "__main__":
         frame = capture_frame(camera)
 
         # Resize frame for better performance.
-        frame = resize_frame(frame, scale_percent=frame_resize_percent)
+        frame = resize_frame(frame)
 
         # Apply the background subtractor to get the foreground mask.
         fgmask = fgbg.apply(frame)
 
         # Get contour area.
-        motion_area = highlight_motion_center(frame, fgmask)
+        motion_area = highlight_motion_center(fgmask)
 
         # Check for motion based on a defined threshold
         if motion_area > 5000:
