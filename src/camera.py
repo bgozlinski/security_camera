@@ -139,6 +139,14 @@ def capture_video(capture, duration=None):
             if frame is None:
                 break
 
+            # Put current DateTime on each frame
+            font = cv2.FONT_HERSHEY_PLAIN
+            now = datetime.now()
+            time_stamp = now.strftime('%Y-%m-%d %H:%M:%S')
+
+            cv2.putText(frame, str(time_stamp), (0, 40),
+                        font, 2, (255, 0, 0), 1, cv2.LINE_AA)
+
             # Display the resulting frame
             cv2.imshow('View', frame)
 
