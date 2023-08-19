@@ -13,6 +13,8 @@ camera_port = int(config['DEFAULT']['CameraPort'])
 frame_resize_percent = int(config['DEFAULT']['FrameResizePercent'])
 save_interval_seconds = int(config['DEFAULT']['SaveIntervalSeconds'])
 frame_skip_count = int(config['DEFAULT']['FrameSkip'])
+capture_image_enabled = config.getboolean('DEFAULT', 'CaptureImage')
+capture_video_enabled = config.getboolean('DEFAULT', 'CaptureVideo')
 motion_area_threshold = int(config['MOTIION']['MotionAreaThreshold'])
 dot_radius = int(config['MOTIION']['DotRadius'])
 dot_colour = tuple(map(int, config.get('MOTION', 'DotColour', fallback="(0, 0, 255)").strip('()').split(',')))
@@ -62,8 +64,10 @@ if __name__ == "__main__":
         if motion_area > motion_area_threshold:
             current_time = datetime.now()
             if current_time >= next_save_time:
-                # capture_image(frame=frame)
-                # capture_video(capture=camera, duration=10)
+                if capture_image_enabled:
+                    capture_image(frame=frame)
+                if capture_video_enabled:
+                    capture_video(capture=camera, duration=save_interval_seconds)
                 next_save_time = current_time + timedelta(seconds=save_interval_seconds)
 
         # Display the combined frame (original frame + foreground mask).
