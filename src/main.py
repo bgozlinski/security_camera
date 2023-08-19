@@ -15,6 +15,9 @@ if __name__ == "__main__":
     # Set the initial save time to the current time.
     next_save_time = datetime.now()
 
+    # Counter to skip frames for optimization
+    frame_skip = 0
+
     # Main loop to process each frame
     while camera.isOpened():
         # Get the current frame
@@ -40,9 +43,12 @@ if __name__ == "__main__":
         combined_frame = np.hstack((frame, cv2.cvtColor(fgmask, cv2.COLOR_GRAY2BGR)))
         cv2.imshow(winname='frame', mat=combined_frame)
 
-        # Break the loop if 'q' is pressed
-        if cv2.waitKey(20) & 0xFF == ord('q'):
-            break
+        # Skip some frames for performance optimization
+        frame_skip += 1
+        if frame_skip % 3 == 0:
+            # Break the loop if 'q' is pressed
+            if cv2.waitKey(20) & 0xFF == ord('q'):
+                break
 
     # Release camera and resources
     camera_stop(camera)
