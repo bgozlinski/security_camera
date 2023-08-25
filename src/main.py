@@ -40,9 +40,6 @@ if __name__ == "__main__":
     # Counter to skip frames for optimization.
     frame_skip = 0
 
-    # Buffer to store the last second of frames
-    frames_buffer = deque(maxlen=int(5*fps))
-
     # User feedback prompt.
     print('Press "q" to stop the video feed')
 
