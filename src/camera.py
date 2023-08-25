@@ -77,8 +77,8 @@ def capture_image(frame):
         filename = now.strftime('img_%Y%m%d%H%M%S.jpg')
 
         # Ensure the "images" directory exists.
-        if not os.path.exists("images"):
-            os.makedirs("images")
+        if not os.path.exists("../images"):
+            os.makedirs("../images")
 
         # Put current DateTime on frame
         font = cv2.FONT_HERSHEY_PLAIN
@@ -88,7 +88,7 @@ def capture_image(frame):
                     font, 1, (255, 0, 0), 1, cv2.LINE_AA)
 
         # Save the frame as an image.
-        cv2.imwrite(f'images/{filename}', frame)
+        cv2.imwrite(f'../images/{filename}', frame)
         print(f"Image saved as images/{filename}")  # Add this line to confirm the image is saved
 
         return True
@@ -128,11 +128,11 @@ def capture_video(capture, duration=None):
     filename = now.strftime('video_%Y%m%d%H%M%S.mp4')
 
     # Ensure the "records" directory exists
-    if not os.path.exists("records"):
-        os.makedirs("records")
+    if not os.path.exists("../records"):
+        os.makedirs("../records")
 
     # Initialize video writer
-    out = cv2.VideoWriter(filename=f'records/{filename}',
+    out = cv2.VideoWriter(filename=f'../records/{filename}',
                           fourcc=cv2.VideoWriter_fourcc(*'mp4v'),
                           fps=fps,
                           frameSize=(frame_width, frame_height),
@@ -156,7 +156,6 @@ def capture_video(capture, duration=None):
 
             # Display the resulting frame
             cv2.imshow('View', frame)
-
             out.write(frame)
 
             if duration and (datetime.now() - start_time).seconds > duration or (cv2.waitKey(1) & 0xFF == ord('q')):
@@ -187,4 +186,4 @@ def resize_frame(frame, scale_percent=50):
 
     width = int(frame.shape[1] * scale_percent / 100)
     height = int(frame.shape[0] * scale_percent / 100)
-    return cv2.resize(frame, (width, height))  # <-- New Function
+    return cv2.resize(frame, (width, height))

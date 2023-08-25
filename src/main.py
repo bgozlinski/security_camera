@@ -6,17 +6,19 @@ from motion_detect import highlight_motion_center
 from datetime import datetime, timedelta
 
 config = configparser.ConfigParser()
-config.read('src/config/config.ini')
+config.read('config/config.ini')
+
 
 # Fetching configurations
-camera_port = int(config['DEFAULT']['CameraPort'])
-frame_resize_percent = int(config['DEFAULT']['FrameResizePercent'])
-save_interval_seconds = int(config['DEFAULT']['SaveIntervalSeconds'])
-frame_skip_count = int(config['DEFAULT']['FrameSkip'])
-capture_image_enabled = config.getboolean('DEFAULT', 'CaptureImage')
-capture_video_enabled = config.getboolean('DEFAULT', 'CaptureVideo')
-motion_area_threshold = int(config['MOTIION']['MotionAreaThreshold'])
-dot_radius = int(config['MOTIION']['DotRadius'])
+camera_port = int(config.get('DEFAULT', 'CameraPort', fallback='0'))
+frame_resize_percent = int(config.get('DEFAULT', 'FrameResizePercent', fallback='50'))
+save_interval_seconds = int(config.get('DEFAULT', 'SaveIntervalSeconds', fallback='10'))
+frame_skip_count = int(config.get('DEFAULT', 'FrameSkip', fallback='1'))
+capture_image_enabled = config['DEFAULT'].getboolean('CaptureImage')
+capture_video_enabled = config['DEFAULT'].getboolean('CaptureVideo')
+
+motion_area_threshold = int(config.get('MOTION', 'MotionAreaThreshold', fallback='500'))
+dot_radius = int(config.get('MOTION', 'DotRadius', fallback='5'))
 dot_colour = tuple(map(int, config.get('MOTION', 'DotColour', fallback="(0, 0, 255)").strip('()').split(',')))
 
 if __name__ == "__main__":
@@ -37,6 +39,9 @@ if __name__ == "__main__":
 
     # Counter to skip frames for optimization.
     frame_skip = 0
+
+    # Buffer to store the last second of frames
+    frames_buffer = deque(maxlen=int(5*fps))
 
     # User feedback prompt.
     print('Press "q" to stop the video feed')
