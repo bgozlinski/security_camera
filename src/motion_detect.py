@@ -4,7 +4,6 @@ import numpy as np
 
 class MotionDetect:
 
-
     def highlight_motion_center(self, frame, fgmask, dot_radius=5, dot_color=(0, 0, 255), area_threshold=5000):
         # Noise Reduction.
         kernel = np.ones((5, 5), np.uint8)
