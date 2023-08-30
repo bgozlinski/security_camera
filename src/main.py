@@ -25,8 +25,15 @@ if __name__ == "__main__":
     # Start the camera.
     camera = Camera(port=camera_port)
 
+    if not camera.is_opened:
+        print("Failed to open camera. Exiting.")
+        exit(1)
+
     # Initialize the Background Subtractor once.
     fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=False)
+
+    # Create an instance of MotionDetect
+    motion_detector = MotionDetect()
 
     # Set the initial save time to future in save_interval_seconds second.
     next_save_time = datetime.now() + timedelta(seconds=save_interval_seconds)
@@ -46,8 +53,11 @@ if __name__ == "__main__":
         fgmask = fgbg.apply(frame)
 
         # Get contour area.
-        motion_area = MotionDetect.highlight_motion_center(frame=frame, fgmask=fgmask, dot_radius=dot_radius,
-                                                           dot_color=dot_colour, area_threshold=motion_area_threshold)
+        motion_area = motion_detector.highlight_motion_center(frame=frame,
+                                                              fgmask=fgmask,
+                                                              dot_radius=dot_radius,
+                                                              dot_color=dot_colour,
+                                                              area_threshold=motion_area_threshold)
 
         # Check for motion based on a defined threshold
         if motion_area:
@@ -58,7 +68,7 @@ if __name__ == "__main__":
                     camera.capture_image(frame=frame)
 
                 if capture_video_enabled:
-                    camera.capture_video(capture=camera, duration=save_interval_seconds)
+                    camera.capture_video(duration=save_interval_seconds)
 
                 next_save_time = current_time + timedelta(seconds=save_interval_seconds)
 
@@ -74,4 +84,4 @@ if __name__ == "__main__":
                 break
 
     # Release camera and resources
-    camera_stop(camera)
+    camera.stop_camera()

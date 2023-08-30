@@ -4,8 +4,8 @@ import numpy as np
 
 class MotionDetect:
 
-    @staticmethod
-    def highlight_motion_center(frame, fgmask, dot_radius=5, dot_color=(0, 0, 255), area_threshold=5000):
+
+    def highlight_motion_center(self, frame, fgmask, dot_radius=5, dot_color=(0, 0, 255), area_threshold=5000):
         # Noise Reduction.
         kernel = np.ones((5, 5), np.uint8)
         fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)

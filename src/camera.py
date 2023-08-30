@@ -15,6 +15,13 @@ class Camera:
     def fps(self):
         return int(self.capture.get(cv2.CAP_PROP_FPS)) if self.is_opened else 0
 
+    @property
+    def frame_width(self):
+        return int(self.capture.get(cv2.CAP_PROP_FRAME_WIDTH)) if self.is_opened else 0
+    @property
+    def frame_height(self):
+        return int(self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT)) if self.is_opened else 0
+
     def start_camera(self, port):
         capture = cv2.VideoCapture(port)
         if capture.isOpened() is False:
@@ -54,13 +61,12 @@ class Camera:
             print(f"Error saving image: {e}")
             return False
 
-    def capture_video(self, capture, duration=None):
-
-        if capture is None or not self.capture.isOpened():
+    def capture_video(self, duration=None):
+        if self.capture is None or not self.capture.isOpened():
             return False
 
-        frame_width = int(self.capture.get(cv2.CAP_PROP_FRAME_WIDTH))
-        frame_height = int(self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        frame_width = self.frame_width
+        frame_height = self.frame_height
         fps = self.fps
 
         now = datetime.now()
