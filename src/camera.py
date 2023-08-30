@@ -7,6 +7,14 @@ class Camera:
     def __init__(self, port):
         self.capture = self.start_camera(port)
 
+    @property
+    def is_opened(self):
+        return self.capture.isOpened() if self.capture else False
+
+    @property
+    def fps(self):
+        return int(self.capture.get(cv2.CAP_PROP_FPS)) if self.is_opened else 0
+
     def start_camera(self, port):
         capture = cv2.VideoCapture(port)
         if capture.isOpened() is False:
@@ -53,7 +61,7 @@ class Camera:
 
         frame_width = int(self.capture.get(cv2.CAP_PROP_FRAME_WIDTH))
         frame_height = int(self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        fps = int(self.capture.get(cv2.CAP_PROP_FPS))
+        fps = self.fps
 
         now = datetime.now()
         filename = now.strftime('video_%Y%m%d%H%M%S.mp4')
