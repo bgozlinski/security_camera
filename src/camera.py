@@ -14,7 +14,7 @@ class Camera:
         return capture
 
     def stop_camera(self):
-        self.captur.release()
+        self.capture.release()
         cv2.destroyAllWindows()
 
     def capture_frame(self):
