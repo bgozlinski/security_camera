@@ -5,6 +5,7 @@ __pycache__/
 
 # Temp files
 temp/
+tests/
 
 # Environments
 .env

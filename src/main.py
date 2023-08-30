@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 import configparser
-from camera import camera_start, camera_stop, capture_frame, capture_image, capture_video, resize_frame
-from motion_detect import highlight_motion_center
 from datetime import datetime, timedelta
+from camera import Camera
+from motion_detect import MotionDetect
 
 config = configparser.ConfigParser()
 config.read('config/config.ini')
@@ -23,13 +23,7 @@ dot_colour = tuple(map(int, config.get('MOTION', 'DotColour', fallback="(0, 0, 2
 
 if __name__ == "__main__":
     # Start the camera.
-    camera, fps = camera_start(port=camera_port)
-
-    # Quick check if camera is available before proceeding.
-    if not camera.isOpened():
-        print("Camera initialization failed!")
-        # Error handling added
-        exit()
+    camera = Camera(port=camera_port)
 
     # Initialize the Background Subtractor once.
     fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=False)
@@ -40,27 +34,20 @@ if __name__ == "__main__":
     # Counter to skip frames for optimization.
     frame_skip = 0
 
-    # User feedback prompt.
-    print('Press "q" to stop the video feed')
-
     # Main loop to process each frame.
     while True:
         # Get the current frame.
-        frame = capture_frame(capture=camera)
+        frame = camera.capture_frame()
 
         # Resize frame for better performance.
-        frame = resize_frame(frame=frame,
-                             scale_percent=frame_resize_percent)
+        frame = camera.resize_frame(frame, scale_percent=frame_resize_percent)
 
         # Apply the background subtractor to get the foreground mask.
         fgmask = fgbg.apply(frame)
 
         # Get contour area.
-        motion_area = highlight_motion_center(frame=frame,
-                                              fgmask=fgmask,
-                                              dot_radius=dot_radius,
-                                              dot_color=dot_colour,
-                                              area_threshold=motion_area_threshold)
+        motion_area = MotionDetect.highlight_motion_center(frame=frame, fgmask=fgmask, dot_radius=dot_radius,
+                                                           dot_color=dot_colour, area_threshold=motion_area_threshold)
 
         # Check for motion based on a defined threshold
         if motion_area:
@@ -68,10 +55,10 @@ if __name__ == "__main__":
 
             if current_time >= next_save_time:
                 if capture_image_enabled:
-                    capture_image(frame=frame)
+                    camera.capture_image(frame=frame)
 
                 if capture_video_enabled:
-                    capture_video(capture=camera, duration=save_interval_seconds)
+                    camera.capture_video(capture=camera, duration=save_interval_seconds)
 
                 next_save_time = current_time + timedelta(seconds=save_interval_seconds)
 
