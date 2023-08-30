@@ -5,6 +5,10 @@ from datetime import datetime, timedelta
 from camera import Camera
 from motion_detect import MotionDetect
 
+"""
+Main script to handle security camera operations.
+"""
+
 config = configparser.ConfigParser()
 config.read('config/config.ini')
 
@@ -22,6 +26,9 @@ dot_radius = int(config.get('MOTION', 'DotRadius', fallback='5'))
 dot_colour = tuple(map(int, config.get('MOTION', 'DotColour', fallback="(0, 0, 255)").strip('()').split(',')))
 
 if __name__ == "__main__":
+    """
+    Main function to initialize and run the security camera.
+    """
     # Start the camera.
     camera = Camera(port=camera_port)
 

@@ -3,8 +3,23 @@ import numpy as np
 
 
 class MotionDetect:
-
+    """
+    A class to handle motion detection.
+    """
     def highlight_motion_center(self, frame, fgmask, dot_radius=5, dot_color=(0, 0, 255), area_threshold=5000):
+        """
+        Highlights the center of motion in a given frame.
+
+        Args:
+            frame (numpy.ndarray): The frame to analyze.
+            fgmask (numpy.ndarray): The foreground mask.
+            dot_radius (int): The radius of the dot to draw.
+            dot_color (tuple): The color of the dot.
+            area_threshold (int): The area threshold for motion detection.
+
+        Returns:
+            int: The area of the detected motion.
+        """
         # Noise Reduction.
         kernel = np.ones((5, 5), np.uint8)
         fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)
