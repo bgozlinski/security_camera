@@ -1,12 +1,13 @@
 import cv2
 import numpy as np
+from typing import Tuple
 
 
 class MotionDetect:
     """
     A class to handle motion detection.
     """
-    def highlight_motion_center(self, frame, fgmask, dot_radius=5, dot_color=(0, 0, 255), area_threshold=5000):
+    def highlight_motion_center(self, frame: np.ndarray, fgmask: np.ndarray, dot_radius: int = 5, dot_color: Tuple[int, int, int] = (0, 0, 255), area_threshold: int = 5000) -> float:
         """
         Highlights the center of motion in a given frame.
 
