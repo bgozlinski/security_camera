@@ -195,7 +195,7 @@ class Camera:
                     break
 
         except Exception as e:
-            print(f'Error durring recording {e}')
+            print(f'Error during recording {e}')
             return False
 
         finally:
