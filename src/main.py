@@ -1,34 +1,29 @@
 import cv2
 import numpy as np
-import configparser
 from datetime import datetime, timedelta
 from camera import Camera
 from motion_detect import MotionDetect
-
-"""
-Main script to handle security camera operations.
-"""
-
-config = configparser.ConfigParser()
-config.read('config/config.ini')
+from config.config_loader import load_config
 
 
-# Fetching configurations
-camera_port = int(config.get('DEFAULT', 'CameraPort', fallback='0'))
-frame_resize_percent = int(config.get('DEFAULT', 'FrameResizePercent', fallback='50'))
-save_interval_seconds = int(config.get('DEFAULT', 'SaveIntervalSeconds', fallback='10'))
-frame_skip_count = int(config.get('DEFAULT', 'FrameSkip', fallback='1'))
-capture_image_enabled = config['DEFAULT'].getboolean('CaptureImage')
-capture_video_enabled = config['DEFAULT'].getboolean('CaptureVideo')
-
-motion_area_threshold = int(config.get('MOTION', 'MotionAreaThreshold', fallback='500'))
-dot_radius = int(config.get('MOTION', 'DotRadius', fallback='5'))
-dot_colour = tuple(map(int, config.get('MOTION', 'DotColour', fallback="(0, 0, 255)").strip('()').split(',')))
-
-if __name__ == "__main__":
+def main():
     """
-    Main function to initialize and run the security camera.
+    Main script to handle security camera operations.
     """
+    config = load_config('config/config.ini')
+
+    # Fetching configurations
+    camera_port = int(config.get('DEFAULT', 'CameraPort', fallback='0'))
+    frame_resize_percent = int(config.get('DEFAULT', 'FrameResizePercent', fallback='50'))
+    save_interval_seconds = int(config.get('DEFAULT', 'SaveIntervalSeconds', fallback='10'))
+    frame_skip_count = int(config.get('DEFAULT', 'FrameSkip', fallback='1'))
+    capture_image_enabled = config['DEFAULT'].getboolean('CaptureImage')
+    capture_video_enabled = config['DEFAULT'].getboolean('CaptureVideo')
+
+    motion_area_threshold = int(config.get('MOTION', 'MotionAreaThreshold', fallback='500'))
+    dot_radius = int(config.get('MOTION', 'DotRadius', fallback='5'))
+    dot_colour = tuple(map(int, config.get('MOTION', 'DotColour', fallback="(0, 0, 255)").strip('()').split(',')))
+
     # Start the camera.
     camera = Camera(port=camera_port)
 
@@ -92,3 +87,6 @@ if __name__ == "__main__":
 
     # Release camera and resources
     camera.stop_camera()
+if __name__ == "__main__":
+    main()
+
