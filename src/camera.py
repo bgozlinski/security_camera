@@ -1,6 +1,23 @@
 import cv2
 import os
+import logging
 from datetime import datetime
+from contextlib import contextmanager
+
+logging.basicConfig(level=logging.INFO)
+
+
+class CameraError(Exception):
+    pass
+
+
+@contextmanager
+def camera_context(port):
+    camera = Camera(port)
+    try:
+        yield camera
+    finally:
+        camera.stop_camera()
 
 
 class Camera:
@@ -67,8 +84,9 @@ class Camera:
             cv2.VideoCapture: The capture object for the camera.
         """
         capture = cv2.VideoCapture(port)
-        if capture.isOpened() is False:
-            print('Error opening the camera')
+        if not capture.isOpened():
+            logging.error('Error opening the camera')
+            raise CameraError('Could not open camera')
         return capture
 
     def stop_camera(self):
