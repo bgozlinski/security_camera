@@ -11,9 +11,9 @@ class MotionDetect:
     def find_motion(self, fg_mask: np.ndarray, area_threshold: int = 5000) -> Tuple[float, Tuple[int, int]]:
         # Noise Reduction.
         kernel = np.ones((5, 5), np.uint8)
-        fgmask = cv2.morphologyEx(fg_mask, cv2.MORPH_OPEN, kernel)
+        fg_mask = cv2.morphologyEx(fg_mask, cv2.MORPH_OPEN, kernel)
 
-        # Find contours in the fgmask.
+        # Find contours in the foreground mask
         contours, _ = cv2.findContours(fg_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         if contours:
