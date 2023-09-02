@@ -41,14 +41,18 @@ def main():
         frame = camera.resize_frame(frame, scale_percent=config['frame_resize_percent'])
 
         # Apply the background subtractor to get the foreground mask.
-        fgmask = fgbg.apply(frame)
+        fg_mask = fgbg.apply(frame)
 
-        # Get contour area.
-        motion_area = motion_detector.highlight_motion_center(frame=frame,
-                                                              fgmask=fgmask,
-                                                              dot_radius=config['dot_radius'],
-                                                              dot_color=config['dot_colour'],
-                                                              area_threshold=config['motion_area_threshold'])
+        # Find motion
+        motion_data = motion_detector.find_motion(fg_mask, area_threshold=config['motion_area_threshold'])
+
+        if motion_data:
+            motion_area, center_coordinates = motion_data
+
+            # Draw dot on motion
+            motion_detector.draw_dot_on_motion(frame, center_coordinates, dot_radius=config['dot_radius'], dot_color=config['dot_colour'])
+        else:
+            motion_area = False
 
         # Check for motion based on a defined threshold
         if motion_area:
